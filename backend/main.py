@@ -12,7 +12,7 @@ from backend.model import Todo
 
 app = FastAPI()
 
-origins = ["https://localhost:300"]
+origins = ["http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,13 +27,13 @@ async def read_root():
     return { "Ping": "Pong" }
 
 
-@app.get("/api/todo")
+@app.get("/api/todo/")
 async def get_all():
     result = await fetch_all_todos()
     return result
 
 
-@app.get("/api/todo/", response_model=Todo)
+@app.get("/api/todo/{title}", response_model=Todo)
 async def get_one(title: str):
     response = await fetch_one_todo(title)
     if response:
@@ -56,7 +56,7 @@ async def update(todo: Todo):
         return response
     raise HTTPException(404, f"No item with title {todo.title}")
 
-@app.delete("/todo/{title}")
+@app.delete("/api/todo/{title}")
 async def delete(title: str):
     response = await delete_todo(title)
     if response:
